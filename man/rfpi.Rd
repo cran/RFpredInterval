@@ -32,27 +32,27 @@ the model to fit.}
 \item{alpha}{Confidence level. (1 - \code{alpha}) is the desired coverage
 level. The default is \code{alpha} = 0.05 for the 95\% prediction interval.}
 
-\item{split_rule}{Split rule for building a forest. Options are \code{ls} for
-CART with least squares (LS) splitting rule, \code{l1} for CART with L1
-splitting rule, \code{spi} for CART with shortest prediction interval (SPI)
-splitting rule. The default is \code{ls}.}
+\item{split_rule}{Split rule for building a forest. Options are \code{"ls"}
+for CART with least-squares (LS) splitting rule, \code{"l1"} for CART with
+L1 splitting rule, \code{"spi"} for CART with shortest prediction interval
+(SPI) splitting rule. The default is \code{"ls"}.}
 
 \item{pi_method}{Methods for building a prediction interval. Options are
-\code{lm} for classical method, \code{spi} for shortest prediction
-interval, \code{quant} for quantile method, \code{hdr} for highest density
-region, and \code{chdr} for contiguous HDR. The default is to use all
-methods for PI construction. Single method or a subset of methods can be
-applied.}
+\code{"lm"} for classical method, \code{"spi"} for shortest prediction
+interval, \code{"quant"} for quantile method, \code{"hdr"} for highest
+density region, and \code{"chdr"} for contiguous HDR. The default is to use
+all methods for PI construction. Single method or a subset of methods can
+be applied.}
 
 \item{calibration}{Apply OOB calibration for finding working level of
-\code{alpha}, i.e. \eqn{alpha_w}. See below for details. The default is
+\code{alpha}, i.e. \eqn{\alpha_w}. See below for details. The default is
 \code{TRUE}.}
 
 \item{rf_package}{Random forest package that can be used for RF training.
-Options are \code{rfsrc} for \code{randomForestSRC} and \code{ranger} for
-\code{ranger} packages. Split rule \code{ls} can be used with both
-packages. However, \code{l1} and \code{spi} split rules can only be used
-with \code{rfsrc}. The default is \code{rfsrc}.}
+Options are \code{"rfsrc"} for \code{randomForestSRC} and \code{"ranger"}
+for \code{ranger} packages. Split rule \code{"ls"} can be used with both
+packages. However, \code{"l1"} and \code{"spi"} split rules can only be
+used with \code{"rfsrc"}. The default is \code{"rfsrc"}.}
 
 \item{params_rfsrc}{List of parameters that should be passed to
 \code{randomForestSRC}. In the default parameter set, \code{ntree} = 2000,
@@ -68,7 +68,7 @@ parameters.}
 \item{params_calib}{List of parameters for calibration procedure.
 \code{range} is the allowed target calibration range for coverage level.
 The value that provides a coverage level within the range is chosen as
-\eqn{alpha_w}. \code{start} is the initial coverage level to start
+\eqn{\alpha_w}. \code{start} is the initial coverage level to start
 calibration procedure. \code{step} is the coverage step size for each
 calibration iteration. \code{refine} is the gradual decrease in \code{step}
 value when close to target coverage level, the default is \code{TRUE} which
@@ -77,19 +77,19 @@ allows gradual decrease.}
 \value{
 A list with the following components:
 
-\item{lm_interval}{Prediction intervals for test data with \code{lm}
+\item{lm_interval}{Prediction intervals for test data with the classical
 method. A list containing lower and upper bounds.}
-\item{spi_interval}{Prediction intervals for test data with \code{spi}
+\item{spi_interval}{Prediction intervals for test data with SPI method. A
+list containing lower and upper bounds.}
+\item{hdr_interval}{Prediction intervals for test data with HDR method. A
+list containing lower and upper bounds of prediction interval for each test
+observation. There may be multiple PIs for a single observation.}
+\item{chdr_interval}{Prediction intervals for test data with contiguous HDR
 method. A list containing lower and upper bounds.}
-\item{hdr_interval}{Prediction intervals for test data with \code{hdr}
-method. A list containing lower and upper bounds of prediction interval for
-each test observation. There may be multiple PIs for a single observation.}
-\item{chdr_interval}{Prediction intervals for test data with \code{chdr}
-method. A list containing lower and upper bounds.}
-\item{quant_interval}{Prediction intervals for test data with \code{quant}
+\item{quant_interval}{Prediction intervals for test data with quantiles
 method. A list containing lower and upper bounds.}
 \item{test_pred}{Random forest predictions for test data.}
-\item{alphaw}{Working level of \code{alpha}, i.e. \eqn{alpha_w}. A numeric
+\item{alphaw}{Working level of \code{alpha}, i.e. \eqn{\alpha_w}. A numeric
 array for the PI methods entered with \code{pi_method}. If
 \code{calibration = FALSE}, it returns \code{NULL}.}
 \item{split_rule}{Split rule used for building the random forest.}
@@ -99,18 +99,18 @@ array for the PI methods entered with \code{pi_method}. If
 Constructs prediction intervals with 15 distinct variations proposed by Roy
 and Larocque (2020). The variations include two aspects: The method used to
 build the forest and the method used to build the prediction interval. There
-are three methods to build the forest, (i) least-squares, (ii) L1 and (iii)
-shortest prediction interval (SPI) from the CART paradigm. There are five
-methods for constructing prediction intervals, classical method, shortest
-prediction interval, quantile method, highest density region, and contiguous
-HDR.
+are three methods to build the forest, (i) least-squares (LS), (ii) L1 and
+(iii) shortest prediction interval (SPI) from the CART paradigm. There are
+five methods for constructing prediction intervals, classical method,
+shortest prediction interval, quantile method, highest density region, and
+contiguous HDR.
 }
 \section{Details}{
- \describe{
+
 
 \strong{Calibration process}
 
-{The calibration procedure uses the "Bag of Observations for Prediction"
+The calibration procedure uses the "Bag of Observations for Prediction"
 (BOP) idea. BOP for a new observation is built with the set inbag
 observations that are in the same terminal nodes as the new observation.
 The calibration procedure uses the BOPs constructed for the training
@@ -123,9 +123,7 @@ level of \eqn{\alpha} called by Roy and Larocque (2020), such that the
 coverage level of the prediction intervals for the training observations is
 closest to the target coverage level. The idea is to find the value of
 \eqn{\alpha_w} using the OOB-BOPs. Once found, (\eqn{1-\alpha_w}) becomes
-the level used to build the prediction intervals for the new observations.}
-
-}
+the level used to build the prediction intervals for the new observations.
 }
 
 \examples{

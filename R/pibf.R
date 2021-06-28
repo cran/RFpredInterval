@@ -9,12 +9,12 @@
 #' @param alpha Confidence level. (1 - \code{alpha}) is the desired coverage
 #'   level. The default is \code{alpha} = 0.05 for the 95% prediction interval.
 #' @param calibration Calibration method for finding working level of
-#'   \code{alpha}, i.e. \eqn{alpha_w}. Options are \code{"cv"}, \code{"oob"},
+#'   \code{alpha}, i.e. \eqn{\alpha_w}. Options are \code{"cv"}, \code{"oob"},
 #'   and \code{FALSE} standing for calibration with cross-validation, OOB
 #'   calibration, and no calibration, respectively. See below for details. The
 #'   default is \code{"cv"}.
 #' @param coverage_range The allowed target calibration range for coverage level.
-#'   \eqn{alpha_w} is selected such that the \code{"cv"} or \code{"oob"}
+#'   \eqn{\alpha_w} is selected such that the \code{"cv"} or \code{"oob"}
 #'   coverage is within \code{coverage_range}.
 #' @param numfolds Number of folds for calibration with cross-validation. The
 #'   default is 5 folds.
@@ -23,18 +23,19 @@
 #'   \code{mtry} = \eqn{px/3} (rounded up), \code{min.node.size} = 5,
 #'   \code{replace} = TRUE. See \code{ranger} for possible parameters.
 #'
-#' @section Details: \describe{
+#' @section Details:
 #'
 #'   \strong{Calibration process}
 #'
-#'   {Let (\eqn{1-\alpha}) be the target coverage level. The goal of the
+#'   Let (\eqn{1-\alpha}) be the target coverage level. The goal of the
 #'   calibration is to find the value of \eqn{\alpha_w}, which is the working
 #'   level of \eqn{\alpha} called by Roy and Larocque (2020), such that the
 #'   coverage level of the PIs for the training observations is closest to the
 #'   target coverage level. Two calibration procedures are provided: calibration
 #'   with cross-validation and out-of-bag (OOB) calibration.
 #'
-#'   1. In calibration with CV, we apply k-fold cross-validation to form
+#'   \enumerate{
+#'   \item In calibration with CV, we apply k-fold cross-validation to form
 #'   prediction intervals for the training observations. In each fold, we split
 #'   the original training data set into training and testing sets. For the
 #'   training set, we train a one-step boosted random forest and compute the OOB
@@ -47,25 +48,24 @@
 #'   coverage level for the constructed PIs. Once we find the \eqn{\alpha_w}, we
 #'   use this level to build the PI for the new observations.
 #'
-#'   2. The OOB calibration procedure is proposed by Roy and Larocque (2020)
-#'   and it is the default calibration procedure of \code{rfpi}. See details
-#'   section of \code{rfpi} for the detailed explanation of this calibration
+#'   \item The OOB calibration procedure is proposed by Roy and Larocque (2020)
+#'   and it is the default calibration procedure of \code{rfpi()}. See details
+#'   section of \code{rfpi()} for the detailed explanation of this calibration
 #'   procedure.
+#'   }
 #'
 #'   In terms of computational time, OOB calibration is faster than calibration
 #'   with CV. However, empirical results show that OOB calibration may result in
 #'   conservative prediction intervals. Therefore, the recommended calibration
 #'   procedure for the PIBF method is calibration with CV.
-#'   }
 #'
-#'  }
 #'
 #' @return A list with the following components:
 #'
 #'   \item{pred_interval}{Prediction intervals for test data. A list containing
 #'   lower and upper bounds.}
 #'   \item{test_pred}{Bias-corrected random forest predictions for test data.}
-#'   \item{alphaw}{Working level of \code{alpha}, i.e. \eqn{alpha_w}. If
+#'   \item{alphaw}{Working level of \code{alpha}, i.e. \eqn{\alpha_w}. If
 #'   \code{calibration = FALSE}, it returns \code{NULL}.}
 #'
 #' @references Alakus, C., Larocque, D., and Labbe, A. (2021). RFpredInterval:

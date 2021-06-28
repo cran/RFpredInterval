@@ -9,7 +9,7 @@ R package which implements Prediction Intervals with Random Forests and Boosted 
 *    `rfpi`: Constructs prediction intervals with 15 distinct variations to produce **P**rediction **I**ntervals with **R**andom **F**orests (RFPI) proposed by Roy and Larocque (2020)
 
 ## Installation
-The package can be installed from GitHub using the `devtools` package. Run the following code in `R` to install:
+This package is available on [CRAN](https://CRAN.R-project.org/package=RFpredInterval). Alternatively, you can install **RFpredInterval** from GitHub using the `devtools` package. Run the following code in `R` to install:
 
 ```R
 if (!require(devtools)) {

@@ -35,9 +35,7 @@ Housing data for 506 census tracts of Boston from the 1970 census. The
 data set contains the original data by Harrison and Rubinfeld (1979).
 }
 \examples{
-\donttest{
-## load generated example data
+## load data
 data(BostonHousing, package = "RFpredInterval")
-}
 }
 \keyword{datasets}

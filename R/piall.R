@@ -19,7 +19,7 @@
 #'   \item{PIBF}{Prediction intervals for test data with PIBF method. A list
 #'   containing lower and upper bounds.}
 #'   \item{LS_LM}{Prediction intervals for test data with least-squares (LS)
-#'   splitting rule and classical method (LM). A list containing lowerand upper
+#'   splitting rule and classical method (LM). A list containing lower and upper
 #'   bounds.}
 #'   \item{LS_SPI}{Prediction intervals for test data with least-squares (LS)
 #'   splitting rule and shortest PI (SPI) method. A list containing lower and
@@ -35,7 +35,7 @@
 #'   splitting rule and contiguous HDR method. A list containing lower and upper
 #'   bounds.}
 #'   \item{L1_LM}{Prediction intervals for test data with \eqn{L_1} splitting
-#'   rule and classical method (LM). A list containing lowerand upper bounds.}
+#'   rule and classical method (LM). A list containing lower and upper bounds.}
 #'   \item{L1_SPI}{Prediction intervals for test data with \eqn{L_1} splitting
 #'   rule and shortest PI (SPI) method. A list containing lower and upper
 #'   bounds.}
@@ -48,7 +48,7 @@
 #'   \item{L1_CHDR}{Prediction intervals for test data with \eqn{L_1} splitting
 #'   rule and contiguous HDR method. A list containing lower and upper bounds.}
 #'   \item{SPI_LM}{Prediction intervals for test data with shortest PI (SPI)
-#'   splitting rule and classical method (LM). A list containing lowerand upper
+#'   splitting rule and classical method (LM). A list containing lower and upper
 #'   bounds.}
 #'   \item{SPI_SPI}{Prediction intervals for test data with shortest PI (SPI)
 #'   splitting rule and shortest PI (SPI) method. A list containing lower and

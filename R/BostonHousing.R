@@ -26,8 +26,6 @@
 #'   }
 #'
 #' @examples
-#' \donttest{
-#' ## load generated example data
+#' ## load data
 #' data(BostonHousing, package = "RFpredInterval")
-#' }
 "BostonHousing"

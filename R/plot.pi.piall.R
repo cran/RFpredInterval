@@ -1,8 +1,8 @@
 #' Plot constructed prediction intervals for \code{'piall'} objects
 #'
-#' Plots the 16 constructed PIs obtained with \code{piall()} function for a test
+#' Plots the 16 constructed PIs obtained with \code{piall()} for a test
 #' observation. For each method, the red point presents the point prediction and
-#' blue lines show the constructed prediction interval(s) for the test
+#' blue line shows the constructed prediction interval for the test
 #' observation. If the true response of the test observation is known, it is
 #' demonstrated with a dashed vertical line. Note that we may have multiple
 #' prediction intervals with the HDR PI method.
