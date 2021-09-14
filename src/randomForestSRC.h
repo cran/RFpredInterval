@@ -21,15 +21,6 @@ struct augmentationObj {
   char *permissibilityFlag;
 };
 
-#include <R_ext/Print.h>
-#include <Rdefines.h>
-#define RF_nativePrint printR
-#define RF_nativeError printR
-#define RF_nativeExit  exit2R
-#define RF_nativeNaN NA_REAL
-#define RF_nativeIsNaN ISNA
-
- 
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
@@ -41,6 +32,15 @@ struct augmentationObj {
 #ifdef _OPENMP
 #include <omp.h>
 #endif
+
+#include <R_ext/Print.h>
+#include <Rdefines.h>
+#define RF_nativePrint printR
+#define RF_nativeError printR
+#define RF_nativeExit  exit2R
+#define RF_nativeNaN NA_REAL
+#define RF_nativeIsNaN ISNA
+
 #ifndef NULL
 #define NULL 0
 #endif

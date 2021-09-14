@@ -174,7 +174,7 @@ rfpi <- function(formula,
   yvar.names <- all.vars(formula(paste(as.character(formula)[2], "~ .")), max.names = 1e7)
   yvar.names <- yvar.names[-length(yvar.names)]
   xvar.names <- setdiff(all.names, yvar.names)
-  xvar <- traindata[, xvar.names]
+  xvar <- traindata[, xvar.names, drop = FALSE]
   yvar <- traindata[, yvar.names]
 
   ## get sample size and px

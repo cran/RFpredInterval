@@ -1,6 +1,6 @@
-64a4a41b3a5c3d3de292356a3e067f44 *DESCRIPTION
+247a7887cfa628c02990b2189b497ec9 *DESCRIPTION
 f076fe5446fc3f7ab5e4c966996d9668 *NAMESPACE
-73515a41e15747fb723f685e43f8ab6e *NEWS.md
+cd905f46394284f64f935bc8e44558e7 *NEWS.md
 5e9d750f2e5cbd4e1d68b79634072588 *R/BostonHousing.R
 a236c470665ce5dd8f81d45b1a30d65e *R/RFpredInterval-package.R
 54e4bcf6041260041b4578785219988e *R/build.bop.R
@@ -16,8 +16,8 @@ f5558db12cad4a08c18648542293a35e *R/holdout.vimp.rfsrc.R
 f9d40ee8f2c31ebc603a19bc9685837c *R/impute.rfsrc.R
 0bd4b911bb80b5c34d6bc98b8d88669a *R/max.subtree.rfsrc.R
 c6dad7b007d2ae5913102278a2877c0c *R/partial.rfsrc.R
-e9f00cb542b2b04df37f7e45c3f1d887 *R/piall.R
-6f4910b7dcbe7e79c2e09c1676b0ac81 *R/pibf.R
+6d9693e294de2cccc6145e6de0d94784 *R/piall.R
+ac501ab8c2cb5b8918bf3015244cd388 *R/pibf.R
 c5bfd31e07456131fffb1b2aa245d468 *R/plot.competing.risk.rfsrc.R
 1bad1564b7a85932807e04531f0f12f3 *R/plot.pi.piall.R
 e014d4b3dc674ef82acec9ec49211fc2 *R/plot.quantreg.rfsrc.R
@@ -28,7 +28,7 @@ dfb67c63c2d77aeec9aee33c577ee366 *R/plot.survival.rfsrc.R
 c0c30fe427760ecee828a1c18ac8344e *R/predict.rfsrc.R
 3621dbc6c91e9013b6740d00da845890 *R/print.rfsrc.R
 3ebc08168dd9c3158d06e85d6f28b76d *R/quantreg.rfsrc.R
-660cfbaabae35d0ce19f51613bfd02a0 *R/rfpi.R
+9d7b99e2115147c6270b424d219a2bdf *R/rfpi.R
 ce99b48fc68b2677eb71a127b2fe521c *R/rfsrc.R
 392a611f63fed7cc186087da0a41c00f *R/rfsrc.anonymous.R
 019b3cd8fc9829656001801487e8f939 *R/rfsrc.cart.R
@@ -50,10 +50,10 @@ fe687a94b8a6d400d0c111d891a0e13b *R/utilities.unsupervised.R
 17fbda5ff1a972cb6b08ab7e93b7d655 *R/var.select.rfsrc.R
 fb83a8390e3eeed1e4b9577c7b0a81a6 *R/vimp.rfsrc.R
 209bdd1761851b9a118c73b3c509b576 *R/zzz.R
-9ce1200c8dc7828b9e1a3e163ab25804 *README.md
+3dee1d843122a47051504be92992217e *README.md
 e66900a0e679a19b0c32de56a9a33366 *cleanup
-0db74c3b77ea9671afbc08ecd2e01dd4 *configure
-d132449236b0458802cc6b9573700b21 *configure.ac
+92ebd7ffa6439296efed19331245e620 *configure
+20e40af36c399e79042eb4a18d501930 *configure.ac
 fdd848794d79d78e269daacb207b9cca *data/BostonHousing.rda
 3cba349dfc4f45311bcd2dd057b8278e *man/BostonHousing.Rd
 1990e8f915f58c4bc9fedd5d902de12e *man/RFpredInterval-package.Rd
@@ -65,7 +65,7 @@ c6153ed085dd7c8ff7088214f974814d *man/piall.Rd
 617d01aba48fe56fd9f8d72381c6e008 *src/Makevars.win
 c386c434624f251a6c7254ab267ca45e *src/R_init_randomForestSRC.c
 e4075b150a75c70501557c838d7fcfb6 *src/randomForestSRC.c
-a33dc6a42a4f486075e0032db54e4919 *src/randomForestSRC.h
+1b871fbc16dd0bac5a24e8e7fe260747 *src/randomForestSRC.h
 600c40c8196f435dc9484ab4817607e2 *src/splitCustom.c
 6bad0c687861656ae72a8cad71dfeabe *src/splitCustom.h
 b8cd4cafd3807889216d50f29da0631b *tests/testthat.R
