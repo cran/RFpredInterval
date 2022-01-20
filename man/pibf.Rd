@@ -13,7 +13,8 @@ pibf(
   coverage_range = c(1 - alpha - 0.005, 1 - alpha + 0.005),
   numfolds = 5,
   params_ranger = list(num.trees = 2000, mtry = ceiling(px/3), min.node.size = 5,
-    replace = TRUE)
+    replace = TRUE),
+  oob = FALSE
 )
 }
 \arguments{
@@ -44,6 +45,9 @@ default is 5 folds.}
 \code{ranger}. In the default parameter set, \code{num.trees} = 2000,
 \code{mtry} = \eqn{px/3} (rounded up), \code{min.node.size} = 5,
 \code{replace} = TRUE. See \code{ranger} for possible parameters.}
+
+\item{oob}{Should out-of-bag (OOB) predictions and prediction intervals for
+the training observations be returned?}
 }
 \value{
 A list with the following components:
@@ -53,6 +57,13 @@ lower and upper bounds.}
 \item{test_pred}{Bias-corrected random forest predictions for test data.}
 \item{alphaw}{Working level of \code{alpha}, i.e. \eqn{\alpha_w}. If
 \code{calibration = FALSE}, it returns \code{NULL}.}
+\item{test_response}{If available, test response.}
+\item{oob_pred_interval}{Out-of-bag (OOB) prediction intervals for train
+data. Prediction intervals are built with \code{alpha}. If
+\code{oob = FALSE}, it returns \code{NULL}.}
+\item{oob_pred}{Bias-corrected out-of-bag (OOB) predictions for train data.
+If \code{oob = FALSE}, it returns \code{NULL}.}
+\item{train_response}{Train response.}
 }
 \description{
 Constructs prediction intervals with boosted forests.
@@ -140,5 +151,6 @@ random forests. Statistical methods in medical research, 29(1), 205-229.
 doi:10.1177/0962280219829885.
 }
 \seealso{
-\code{\link{rfpi}} \code{\link{piall}}
+\code{\link{piall}} \code{\link{rfpi}}
+\code{\link{print.rfpredinterval}}
 }

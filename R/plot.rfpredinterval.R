@@ -1,4 +1,4 @@
-#' Plot constructed prediction intervals for \code{'piall'} objects
+#' Plot constructed prediction intervals for \code{('rfpredinterval', 'piall')} objects
 #'
 #' Plots the 16 constructed PIs obtained with \code{piall()} for a test
 #' observation. For each method, the red point presents the point prediction and
@@ -7,7 +7,7 @@
 #' demonstrated with a dashed vertical line. Note that we may have multiple
 #' prediction intervals with the HDR PI method.
 #'
-#' @param x An object of class \code{'piall'}.
+#' @param x An object of class \code{('rfpredinterval', 'piall')}.
 #' @param test_id Integer value specifying the test observation to be plotted.
 #' The default is 1.
 #' @param sort Should the prediction intervals be sorted according to their
@@ -38,24 +38,23 @@
 #'              testdata = testdata, num.trees = 50)
 #'
 #' ## plot the constructed PIs for test_id = 1 with all methods
-#' plot.pi(out, test_id = 1)
+#' plot(out, test_id = 1)
 #' }
 #'
-#' @method plot.pi piall
-#' @aliases plot.pi.piall plot.pi
 #'
 #' @seealso
 #'   \code{\link{piall}}
 #'
-plot.pi.piall <- function(x, test_id = 1, sort = TRUE, show_response = TRUE, ...)
+plot.rfpredinterval <- function(x, test_id = 1, sort = TRUE, show_response = TRUE, ...)
 {
   object <- x
-  if (!inherits(object, "piall")) {
-    stop("This function only works for objects of class 'piall'.")
-  }
-
+  remove(x)
   ## object cannot be missing
   if (missing(object)) {stop("Object is missing.")}
+  if (sum(inherits(object, c("rfpredinterval", "piall"), TRUE) == c(1, 2)) != 2) {
+    stop("This function only works for objects of class `(rfpredinterval, piall)`.")
+  }
+
   ## only one test observation is allowed
   test_id <- test_id[1]
   ## test_id must be integer from 1 to ntest
@@ -80,8 +79,8 @@ plot.pi.piall <- function(x, test_id = 1, sort = TRUE, show_response = TRUE, ...
     }
   }
   out_testid <- data.frame(Method = pi_testid[, 1], Method_sub = pi_testid[, 2],
-                          Lower = as.numeric(pi_testid[, 3]), Upper = as.numeric(pi_testid[, 4]),
-                          PIlength = as.numeric(pi_testid[, 5]))
+                           Lower = as.numeric(pi_testid[, 3]), Upper = as.numeric(pi_testid[, 4]),
+                           PIlength = as.numeric(pi_testid[, 5]))
   if (sort) {
     out_testid <- out_testid[order(out_testid$PIlength, decreasing = FALSE), ]
   }
@@ -95,17 +94,17 @@ plot.pi.piall <- function(x, test_id = 1, sort = TRUE, show_response = TRUE, ...
   pred_testid[grepl("SPI_",out_testid$Method)] <- object$pred_spi[test_id]
   out_testid$Pred <- pred_testid
 
-  ## save par settings
+  # save par settings
   old.par <- par(no.readonly = TRUE)
   on.exit(par(old.par))
   par(mfrow=c(1,1), mar=c(3,6,2,2), cex.axis=0.75, cex.main=1)
 
-  ## draw horizontal error bars representing the PIs
-  plot(out_testid$Pred, out_testid$Method_id,
-       xlab = NA, ylab = NA, type = "n",
-       xlim = range(c(min(out_testid$Lower), max(out_testid$Upper), object$test_response[test_id])), yaxt = "n",
-       panel.first = grid(NULL, NA, lty = 1, col = "grey92"),
-       main = paste0("Prediction intervals for test_id = ", test_id))
+  # draw horizontal error bars representing the PIs
+  matplot(out_testid$Pred, out_testid$Method_id,
+               xlab = NA, ylab = NA, type = "n",
+               xlim = range(c(min(out_testid$Lower), max(out_testid$Upper), object$test_response[test_id])), yaxt = "n",
+               panel.first = grid(NULL, NA, lty = 1, col = "grey92"),
+               main = paste0("Prediction intervals for test_id = ", test_id))
   suppressWarnings(arrows(out_testid$Lower, out_testid$Method_id, out_testid$Upper, out_testid$Method_id, length = 0.05, angle = 90, code = 3, lwd = 2, col = "#5BB0BA"))
   points(out_testid$Pred, out_testid$Method_id, col = "#C44B4F", pch = 20)
   axis(2, at = out_testid$Method_id, labels = gsub("_","-",out_testid$Method), col.axis = "black", las = 2, tck = 0)
@@ -118,4 +117,3 @@ plot.pi.piall <- function(x, test_id = 1, sort = TRUE, show_response = TRUE, ...
   ## Return the plot.variable object for reuse
   invisible(out_testid)
 }
-plot.pi <- plot.pi.piall

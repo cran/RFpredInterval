@@ -113,5 +113,6 @@ out <- piall(formula = medv ~ ., traindata = traindata,
 
 }
 \seealso{
-\code{\link{pibf}} \code{\link{rfpi}} \code{\link{plot.pi.piall}}
+\code{\link{pibf}} \code{\link{rfpi}}
+\code{\link{plot.rfpredinterval}} \code{\link{print.rfpredinterval}}
 }

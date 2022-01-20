@@ -16,7 +16,7 @@ traindata <- BostonHousing[trainindex, ]
 testdata <- BostonHousing[-trainindex, ]
 
 ## Split data set into train and test
-## for piall and plot.pi.piall functions
+## for piall and plot.rfpredinterval functions
 set.seed(2345)
 testindex2 <- 1
 trainindex2 <- sample(2:nrow(BostonHousing), size = 50, replace = FALSE)
@@ -85,13 +85,13 @@ test_that("test_response",{
 })
 
 out2 <- out1
-class(out2) <- "notpiall"
+class(out2) <- c("wrongclass", "wrongclass")
 
 test_that("test_id",{
-  expect_error(plot.pi(out1, test_id = 2),
-               "test_id must be an integer from 1 to ntest.")
-  expect_error(plot.pi(out2, test_id = 1),
-               "This function only works for objects of class 'piall'.")
+  expect_error(plot.rfpredinterval(out1, test_id = 2),
+               "test_id must be an integer from 1 to ntest.", fixed = TRUE)
+  expect_error(plot.rfpredinterval(out2, test_id = 1),
+               "This function only works for objects of class `(rfpredinterval, piall)`.", fixed = TRUE)
 })
 
 

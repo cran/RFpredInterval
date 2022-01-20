@@ -1,7 +1,7 @@
 Package: RFpredInterval
 Type: Package
 Title: Prediction Intervals with Random Forests and Boosted Forests
-Version: 1.0.4
+Version: 1.0.5
 Authors@R: 
     c(person(given = "Cansu", family = "Alakus", role = c("aut", "cre"), email = "cansu.alakus@hec.ca"),
       person(given = "Denis", family = "Larocque", role = c("aut"), email = "denis.larocque@hec.ca"),
@@ -17,13 +17,13 @@ Depends: R (>= 3.6.0)
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Imports: ranger, data.table, hdrcde, parallel, data.tree, DiagrammeR
 Suggests: knitr, rmarkdown, testthat
 URL: https://github.com/calakus/RFpredInterval
 BugReports: https://github.com/calakus/RFpredInterval/issues
 NeedsCompilation: yes
-Packaged: 2021-09-14 14:53:50 UTC; cansualakus
+Packaged: 2022-01-20 19:16:25 UTC; cansualakus
 Author: Cansu Alakus [aut, cre],
   Denis Larocque [aut],
   Aurelie Labbe [aut],
@@ -31,4 +31,4 @@ Author: Cansu Alakus [aut, cre],
   Udaya B. Kogalur [ctb] (Author of included randomForestSRC codes)
 Maintainer: Cansu Alakus <cansu.alakus@hec.ca>
 Repository: CRAN
-Date/Publication: 2021-09-14 15:20:02 UTC
+Date/Publication: 2022-01-20 19:42:44 UTC

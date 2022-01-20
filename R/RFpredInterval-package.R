@@ -1,25 +1,40 @@
 #' RFpredInterval: A package for building prediction intervals with random
 #' forests and boosted forests
 #'
-#' RFpredInterval provides methods to build prediction intervals with random
-#' forests. The methods provided in the package are Prediction Intervals with
-#' Boosted Forests (PIBF) proposed by Alakus et al. (2021) and 15 distinct
-#' variations to build PIs proposed by Roy and Larocque (2020). RFpredInterval
-#' includes two main functions: \code{pibf()} and \code{rfpi()}. \code{pibf()}
-#' applies the PIBF method and it uses the CRAN package \code{ranger} (Wright
-#' and Ziegler, 2017) to fit random forests. \code{rfpi()} applies the 15
-#' variations proposed by Roy and Larocque (2020). For \code{rfpi()},
-#' RFpredInterval uses \code{randomForestSRC} package (Ishwaran and Kogalur,
-#' 2021) by freezing at the version 2.11.0. The custom splitting rule feature is
-#' utilised to apply the splitting rules L1 and SPI. For the least-squares
-#' splitting rule, both \code{randomForestSRC} and \code{ranger} packages are
-#' applicable.
+#' \code{RFpredInterval} provides methods to build prediction intervals with
+#' random forests. The methods provided in the package are Prediction Intervals
+#' with Boosted Forests (PIBF) proposed by Alakus et al. (2021) and 15 distinct
+#' variations to build PIs proposed by Roy and Larocque (2020). Ten of these
+#' methods have specialized splitting rules in the random forest growing process.
+#' These methods are the ones with L1 and shortest prediction interval (SPI)
+#' splitting rules proposed by Roy and Larocque (2020). To implement these
+#' methods, the custom split feature of the \code{randomForestSRC} package
+#' (Ishwaran and Kogalur, 2021) have been utilised.
+#'
+#' The \code{randomForestSRC} package allows users to define a custom splitting
+#' rule for the tree growing process. The user needs to define the customized
+#' splitting rule in the \code{splitCustom.c} file. After modifying the
+#' \code{splitCustom.c} file, all C source code files under the \code{src}
+#' folder of the package must be recompiled. Finally, the package must be
+#' re-installed for the custom split rule to become available.
+#' \code{RFpredInterval} uses \code{randomForestSRC} package by freezing at the
+#' version 2.11.0.
+#'
+#' \code{RFpredInterval} includes two main functions: \code{pibf()} and
+#' \code{rfpi()}. \code{pibf()} applies the PIBF method and it uses the
+#' \code{ranger} package (Wright and Ziegler, 2017) to fit random forests.
+#' \code{rfpi()} applies the 15 variations proposed by Roy and Larocque (2020).
+#' For \code{rfpi()}, \code{RFpredInterval} uses \code{randomForestSRC} package.
+#' For the least-squares splitting rule, both \code{randomForestSRC} and
+#' \code{ranger} packages are applicable.
+#'
 #'
 #' @section RFpredInterval functions:
 #'   \code{\link{pibf}}
 #'   \code{\link{rfpi}}
 #'   \code{\link{piall}}
-#'   \code{\link{plot.pi.piall}}
+#'   \code{\link{plot.rfpredinterval}}
+#'   \code{\link{print.rfpredinterval}}
 #'
 #' @references Alakus, C., Larocque, D., and Labbe, A. (2021). RFpredInterval:
 #'   An R Package for Prediction Intervals with Random Forests and Boosted

@@ -22,6 +22,8 @@
 #'   \code{ranger}. In the default parameter set, \code{num.trees} = 2000,
 #'   \code{mtry} = \eqn{px/3} (rounded up), \code{min.node.size} = 5,
 #'   \code{replace} = TRUE. See \code{ranger} for possible parameters.
+#' @param oob Should out-of-bag (OOB) predictions and prediction intervals for
+#'   the training observations be returned?
 #'
 #' @section Details:
 #'
@@ -67,6 +69,13 @@
 #'   \item{test_pred}{Bias-corrected random forest predictions for test data.}
 #'   \item{alphaw}{Working level of \code{alpha}, i.e. \eqn{\alpha_w}. If
 #'   \code{calibration = FALSE}, it returns \code{NULL}.}
+#'   \item{test_response}{If available, test response.}
+#'   \item{oob_pred_interval}{Out-of-bag (OOB) prediction intervals for train
+#'   data. Prediction intervals are built with \code{alpha}. If
+#'   \code{oob = FALSE}, it returns \code{NULL}.}
+#'   \item{oob_pred}{Bias-corrected out-of-bag (OOB) predictions for train data.
+#'   If \code{oob = FALSE}, it returns \code{NULL}.}
+#'   \item{train_response}{Train response.}
 #'
 #' @references Alakus, C., Larocque, D., and Labbe, A. (2021). RFpredInterval:
 #'   An R Package for Prediction Intervals with Random Forests and Boosted
@@ -109,7 +118,8 @@
 #' ## get the working level of alpha (alphaw)
 #' out2$alphaw
 #'
-#' @seealso \code{\link{rfpi}} \code{\link{piall}}
+#' @seealso \code{\link{piall}} \code{\link{rfpi}}
+#' \code{\link{print.rfpredinterval}}
 
 pibf <- function(formula,
                  traindata,
@@ -119,7 +129,8 @@ pibf <- function(formula,
                  coverage_range = c(1-alpha-0.005, 1-alpha+0.005),
                  numfolds = 5,
                  params_ranger = list(num.trees = 2000, mtry = ceiling(px/3),
-                                      min.node.size = 5, replace = TRUE))
+                                      min.node.size = 5, replace = TRUE),
+                 oob = FALSE)
 {
   ## make formula object
   formula <- as.formula(formula)
@@ -129,9 +140,12 @@ pibf <- function(formula,
   if (is.null(testdata)) {stop("'testdata' is missing.")}
   if (!is.data.frame(traindata)) {stop("'traindata' must be a data frame.")}
   if (!is.data.frame(testdata)) {stop("'testdata' must be a data frame.")}
+  traindata <- as.data.frame(traindata)
+  testdata <- as.data.frame(testdata)
 
   ## verify key options
   calibration <- match.arg(as.character(calibration), c("cv", "oob", FALSE))
+  oob <- match.arg(as.character(oob), c(FALSE, TRUE))
 
   ## check the dimension of coverage_range
   if (length(as.numeric(coverage_range)) != 2) {
@@ -232,13 +246,31 @@ pibf <- function(formula,
                    response = NULL)
 
   ## store PI information
-  pred.interval = list(lower = PI.obj$lower,
+  pred.interval <- list(lower = PI.obj$lower,
                        upper = PI.obj$upper)
+
+  ## PI construction for train data with OOB predictions and OOB-BOP
+  if (oob) {
+    if (calibration != "oob") {
+      BOPoob <- buildoobbop(mem.train, inbag, residual = res)
+    }
+    PI.obj <- formpi(alpha = alpha,
+                     BOP = BOPoob,
+                     mean = mean.oob,
+                     response = NULL)
+    oob.pred.interval <- list(lower = PI.obj$lower,
+                              upper = PI.obj$upper)
+  }
 
   ## return list
   out <- list(pred_interval = pred.interval,
               test_pred = mean.test,
-              alphaw = if(calibration == FALSE){NULL}else{alphaw})
+              alphaw = if(calibration == FALSE){NULL}else{alphaw},
+              test_response = if(is.element(yvar.names, names(testdata))){testdata[, yvar.names]}else{NULL},
+              oob_pred_interval = if(oob){oob.pred.interval}else{NULL},
+              oob_pred = if(oob){mean.oob}else{NULL},
+              train_response = yvar)
 
+  class(out) <- c("rfpredinterval", "pibf")
   return(out)
 }

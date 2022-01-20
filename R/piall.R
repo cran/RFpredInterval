@@ -90,7 +90,8 @@
 #'   testdata = testdata, num.trees = 50)
 #' }
 #'
-#' @seealso \code{\link{pibf}} \code{\link{rfpi}} \code{\link{plot.pi.piall}}
+#' @seealso \code{\link{pibf}} \code{\link{rfpi}}
+#' \code{\link{plot.rfpredinterval}} \code{\link{print.rfpredinterval}}
 
 piall <- function(formula,
                   traindata,
@@ -107,6 +108,8 @@ piall <- function(formula,
   if (is.null(testdata)) {stop("'testdata' is missing.")}
   if (!is.data.frame(traindata)) {stop("'traindata' must be a data frame.")}
   if (!is.data.frame(testdata)) {stop("'testdata' must be a data frame.")}
+  traindata <- as.data.frame(traindata)
+  testdata <- as.data.frame(testdata)
 
   ## get variable names
   all.names <- names(traindata)
@@ -165,12 +168,12 @@ piall <- function(formula,
               SPI_Quant = rfpi_spi_obj$quant_interval,
               SPI_HDR = rfpi_spi_obj$hdr_interval,
               SPI_CHDR = rfpi_spi_obj$chdr_interval,
-              pred_pibf = pibf_obj$test_pred,
-              pred_ls = rfpi_ls_obj$test_pred,
-              pred_l1 = rfpi_l1_obj$test_pred,
-              pred_spi = rfpi_spi_obj$test_pred,
+              pred_pibf = as.numeric(pibf_obj$test_pred),
+              pred_ls = as.numeric(rfpi_ls_obj$test_pred),
+              pred_l1 = as.numeric(rfpi_l1_obj$test_pred),
+              pred_spi = as.numeric(rfpi_spi_obj$test_pred),
               test_response = if(is.element(yvar.names, names(testdata))){testdata[, yvar.names]}else{NULL})
 
-  class(out) <- "piall"
+  class(out) <- c("rfpredinterval", "piall")
   return(out)
 }

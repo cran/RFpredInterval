@@ -18,7 +18,8 @@ rfpi(
   params_ranger = list(num.trees = 2000, mtry = ceiling(px/3), min.node.size = 5,
     replace = TRUE),
   params_calib = list(range = c(1 - alpha - 0.005, 1 - alpha + 0.005), start = (1 -
-    alpha), step = 0.01, refine = TRUE)
+    alpha), step = 0.01, refine = TRUE),
+  oob = FALSE
 )
 }
 \arguments{
@@ -73,6 +74,9 @@ calibration procedure. \code{step} is the coverage step size for each
 calibration iteration. \code{refine} is the gradual decrease in \code{step}
 value when close to target coverage level, the default is \code{TRUE} which
 allows gradual decrease.}
+
+\item{oob}{Should out-of-bag (OOB) predictions and prediction intervals for
+the training observations be returned?}
 }
 \value{
 A list with the following components:
@@ -89,11 +93,18 @@ method. A list containing lower and upper bounds.}
 \item{quant_interval}{Prediction intervals for test data with quantiles
 method. A list containing lower and upper bounds.}
 \item{test_pred}{Random forest predictions for test data.}
+\item{test_response}{If available, test response.}
 \item{alphaw}{Working level of \code{alpha}, i.e. \eqn{\alpha_w}. A numeric
 array for the PI methods entered with \code{pi_method}. If
 \code{calibration = FALSE}, it returns \code{NULL}.}
 \item{split_rule}{Split rule used for building the random forest.}
 \item{rf_package}{Random forest package that was used for RF training.}
+\item{oob_pred_interval}{Out-of-bag (OOB) prediction intervals for train
+data. Prediction intervals are built with \code{alpha}. If
+\code{oob = FALSE}, it returns \code{NULL}.}
+\item{oob_pred}{Out-of-bag (OOB) predictions for train data.
+If \code{oob = FALSE}, it returns \code{NULL}.}
+\item{train_response}{Train response.}
 }
 \description{
 Constructs prediction intervals with 15 distinct variations proposed by Roy
@@ -132,10 +143,10 @@ data(BostonHousing, package = "RFpredInterval")
 set.seed(2345)
 
 ## define train/test split
-trainindex <- sample(1:nrow(BostonHousing),
-  size = round(nrow(BostonHousing) * 0.7), replace = FALSE)
+testindex <- 1:10
+trainindex <- sample(11:nrow(BostonHousing), size = 100, replace = FALSE)
 traindata <- BostonHousing[trainindex, ]
-testdata <- BostonHousing[-trainindex, ]
+testdata <- BostonHousing[testindex, ]
 px <- ncol(BostonHousing) - 1
 
 ## contruct 90\% PI with "l1" split rule and "spi" PI method with calibration
@@ -170,5 +181,6 @@ random forests. Statistical methods in medical research, 29(1), 205-229.
 doi:10.1177/0962280219829885.
 }
 \seealso{
-\code{\link{pibf}} \code{\link{piall}}
+\code{\link{piall}} \code{\link{pibf}}
+\code{\link{print.rfpredinterval}}
 }

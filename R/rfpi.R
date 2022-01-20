@@ -50,6 +50,8 @@
 #'   calibration iteration. \code{refine} is the gradual decrease in \code{step}
 #'   value when close to target coverage level, the default is \code{TRUE} which
 #'   allows gradual decrease.
+#' @param oob Should out-of-bag (OOB) predictions and prediction intervals for
+#'   the training observations be returned?
 #'
 #' @section Details:
 #'
@@ -85,11 +87,18 @@
 #'   \item{quant_interval}{Prediction intervals for test data with quantiles
 #'   method. A list containing lower and upper bounds.}
 #'   \item{test_pred}{Random forest predictions for test data.}
+#'   \item{test_response}{If available, test response.}
 #'   \item{alphaw}{Working level of \code{alpha}, i.e. \eqn{\alpha_w}. A numeric
 #'   array for the PI methods entered with \code{pi_method}. If
 #'   \code{calibration = FALSE}, it returns \code{NULL}.}
 #'   \item{split_rule}{Split rule used for building the random forest.}
 #'   \item{rf_package}{Random forest package that was used for RF training.}
+#'   \item{oob_pred_interval}{Out-of-bag (OOB) prediction intervals for train
+#'   data. Prediction intervals are built with \code{alpha}. If
+#'   \code{oob = FALSE}, it returns \code{NULL}.}
+#'   \item{oob_pred}{Out-of-bag (OOB) predictions for train data.
+#'   If \code{oob = FALSE}, it returns \code{NULL}.}
+#'   \item{train_response}{Train response.}
 #'
 #' @references Roy, M. H., & Larocque, D. (2020). Prediction intervals with
 #'   random forests. Statistical methods in medical research, 29(1), 205-229.
@@ -101,10 +110,10 @@
 #' set.seed(2345)
 #'
 #' ## define train/test split
-#' trainindex <- sample(1:nrow(BostonHousing),
-#'   size = round(nrow(BostonHousing) * 0.7), replace = FALSE)
+#' testindex <- 1:10
+#' trainindex <- sample(11:nrow(BostonHousing), size = 100, replace = FALSE)
 #' traindata <- BostonHousing[trainindex, ]
-#' testdata <- BostonHousing[-trainindex, ]
+#' testdata <- BostonHousing[testindex, ]
 #' px <- ncol(BostonHousing) - 1
 #'
 #' ## contruct 90% PI with "l1" split rule and "spi" PI method with calibration
@@ -132,7 +141,8 @@
 #' ## get the PI with "quant" method for the testdata
 #' cbind(out2$quant_interval$lower, out2$quant_interval$upper)
 #'
-#' @seealso \code{\link{pibf}} \code{\link{piall}}
+#' @seealso \code{\link{piall}} \code{\link{pibf}}
+#' \code{\link{print.rfpredinterval}}
 
 rfpi <- function(formula,
                  traindata,
@@ -147,7 +157,8 @@ rfpi <- function(formula,
                  params_ranger = list(num.trees = 2000, mtry = ceiling(px/3),
                                       min.node.size = 5, replace = TRUE),
                  params_calib = list(range = c(1-alpha-0.005, 1-alpha+0.005),
-                                     start = (1-alpha), step = 0.01, refine = TRUE))
+                                     start = (1-alpha), step = 0.01, refine = TRUE),
+                 oob = FALSE)
 {
   ## make formula object
   formula <- as.formula(formula)
@@ -157,12 +168,15 @@ rfpi <- function(formula,
   if (is.null(testdata)) {stop("'testdata' is missing.")}
   if (!is.data.frame(traindata)) {stop("'traindata' must be a data frame.")}
   if (!is.data.frame(testdata)) {stop("'testdata' must be a data frame.")}
+  traindata <- as.data.frame(traindata)
+  testdata <- as.data.frame(testdata)
 
   ## verify key options
   rf_package <- match.arg(rf_package, c("rfsrc", "ranger"))
   split_rule <- match.arg(split_rule, c("ls", "l1", "spi"))
   pi_method <- match.arg(pi_method, c("lm", "spi", "quant", "hdr", "chdr"), several.ok = TRUE)
   set_pi_method <- pi_method
+  oob <- match.arg(as.character(oob), c(FALSE, TRUE))
 
   ## check for split_rule - package consistency
   if ((split_rule == "l1" || split_rule == "spi") & rf_package == "ranger") {
@@ -259,6 +273,7 @@ rfpi <- function(formula,
 
   ## initialize storage
   PI_list <- list()
+  oob_PI_list <- list()
   alphaw_list <- list()
   bw <- NULL
 
@@ -300,7 +315,7 @@ rfpi <- function(formula,
       }
 
       ## compute optimal bandwidth for hdr and chdr
-      if (pi_method == "hdr" || pi_method == "chdr") {
+      if (pi_method %in% c("hdr","chdr")) {
         if (is.null(bw)) {
           bw <- opt_bw(BOP = BOPoob, alpha = alpha, nn = 10)
         }
@@ -308,7 +323,7 @@ rfpi <- function(formula,
 
       ## set parameters for form PI functions
       params_formpi <- list(BOP = BOPoob, response = yvar)
-      if (pi_method == "hdr" || pi_method == "chdr") {
+      if (pi_method %in% c("hdr","chdr")) {
         params_formpi[["bw"]] <- bw
       }
 
@@ -319,7 +334,7 @@ rfpi <- function(formula,
       alphaw <- alpha
 
       ## compute optimal bandwidth for hdr and chdr
-      if (pi_method == "hdr" || pi_method == "chdr") {
+      if (pi_method %in% c("hdr","chdr")) {
         if (is.null(bw)) {
           ## build OOB-BOP
           BOPoob <- buildoobbop_ib(mem.train, inbag, yvar)
@@ -330,14 +345,13 @@ rfpi <- function(formula,
               stop("Some observations have empty BOP. Increase the number of trees, 'ntree' in params_rfsrc.")
             }
           }
-
           bw <- opt_bw(BOP = BOPoob, alpha = alpha, nn = 10)
         }
       }
     }
 
     ## PI construction for test data
-    if (pi_method == "hdr" || pi_method == "chdr") {
+    if (pi_method %in% c("hdr","chdr")) {
       PI.obj <- formpi_fnc(BOP = BOPtest,
                            alpha = alphaw,
                            bw = bw,
@@ -354,9 +368,31 @@ rfpi <- function(formula,
     } else {
       pred_interval = list(lower = PI.obj$lower, upper = PI.obj$upper)
     }
-
     PI_list[[pi_method]] <- pred_interval
     alphaw_list[[pi_method]] <- alphaw
+
+    ## PI construction for train data with OOB predictions and OOB-BOP
+    if (oob) {
+      if (pi_method %in% c("hdr","chdr")) {
+        PI.obj <- formpi_fnc(BOP = BOPoob,
+                             alpha = alpha,
+                             bw = bw,
+                             response = NULL)
+      } else {
+        BOPoob <- buildoobbop_ib(mem.train, inbag, yvar)
+        PI.obj <- formpi_fnc(BOP = BOPoob,
+                             alpha = alpha,
+                             response = NULL)
+      }
+
+      ## store PI information for train data
+      if (pi_method == "hdr") {
+        oob_pred_interval <- PI.obj$pi
+      } else {
+        oob_pred_interval = list(lower = PI.obj$lower, upper = PI.obj$upper)
+      }
+      oob_PI_list[[pi_method]] <- oob_pred_interval
+    }
   }## end of PI construction for each PI method
 
   alphaw <- unlist(alphaw_list)
@@ -368,9 +404,14 @@ rfpi <- function(formula,
               chdr_interval = if("chdr" %in% set_pi_method){PI_list[["chdr"]]}else{NULL},
               quant_interval = if("quant" %in% set_pi_method){PI_list[["quant"]]}else{NULL},
               test_pred = mean.test,
+              test_response = if(is.element(yvar.names, names(testdata))){testdata[, yvar.names]}else{NULL},
               alphaw = if(calibration){alphaw}else{NULL},
               split_rule = split_rule,
-              rf_package = rf_package)
+              rf_package = rf_package,
+              oob_pred_interval = if(oob){oob_PI_list}else{NULL},
+              oob_pred = if(oob){mean.oob}else{NULL},
+              train_response = yvar)
 
+  class(out) <- c("rfpredinterval", "rfpi")
   return(out)
 }
