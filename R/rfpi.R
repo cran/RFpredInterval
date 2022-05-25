@@ -184,16 +184,37 @@ rfpi <- function(formula,
   }
 
   ## get variable names
-  all.names <- names(traindata)
+  all.names <- all.vars(formula, max.names = 1e7)
   yvar.names <- all.vars(formula(paste(as.character(formula)[2], "~ .")), max.names = 1e7)
   yvar.names <- yvar.names[-length(yvar.names)]
-  xvar.names <- setdiff(all.names, yvar.names)
+  py <- length(yvar.names)
+  if (length(all.names) <= py) {
+    stop("formula is misspecified: total number of variables does not exceed total number of y-variables")
+  }
+  if (all.names[py + 1] == ".") {
+    if (py == 0) {
+      xvar.names <- names(traindata)
+    } else {
+      xvar.names <- names(traindata)[!is.element(names(traindata), all.names[1:py])]
+    }
+  } else {
+    if(py == 0) {
+      xvar.names <- all.names
+    } else {
+      xvar.names <- all.names[-c(1:py)]
+    }
+    not.specified <- !is.element(xvar.names, names(traindata))
+    if (sum(not.specified) > 0) {
+      stop("formula is misspecified, object ", xvar.names[not.specified], " not found")
+    }
+  }
   xvar <- traindata[, xvar.names, drop = FALSE]
-  yvar <- traindata[, yvar.names]
+  yvar <- traindata[, yvar.names, drop = FALSE]
+  traindata <- cbind(xvar, yvar)
+  yvar <- yvar[, yvar.names]
 
   ## get sample size and px
   ntrain <- nrow(traindata)
-  ntest <- nrow(testdata)
   px <- ncol(xvar)
 
   ## filter the test data based on the formula

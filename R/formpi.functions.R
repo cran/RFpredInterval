@@ -99,7 +99,7 @@ opt_bw <- function(BOP, alpha, nn = 10){
     BOP1 <- BOP[[smp[i]]]
     if (!is.null(BOP1) & ((quantile(BOP1, 0.75)-quantile(BOP1, 0.25)) > 0)) {
       bw1 <- try(hdrcde::hdrbw(BOP1, HDRlevel = (1-alpha)), silent = TRUE)
-      if (class(bw1) != "try-error") {
+      if (!inherits(bw1, "try-error")) {
         bw <- c(bw, bw1)
       }
     }
