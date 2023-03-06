@@ -1,3 +1,7 @@
+## RFpredInterval 1.0.7
+* Fixed function declaration without a prototype.
+* Fixed sprintf calls per Prof. Ripley.
+
 ## RFpredInterval 1.0.6
 Fixed xvar.names extraction from formula object.
 

@@ -77,9 +77,9 @@
 #'   If \code{oob = FALSE}, it returns \code{NULL}.}
 #'   \item{train_response}{Train response.}
 #'
-#' @references Alakus, C., Larocque, D., and Labbe, A. (2021). RFpredInterval:
-#'   An R Package for Prediction Intervals with Random Forests and Boosted
-#'   Forests. arXiv preprint arXiv:2106.08217.
+#' @references Alakus, C., Larocque, D., & Labbe, A. (2022). RFpredInterval: An
+#'   R Package for Prediction Intervals with Random Forests and Boosted Forests.
+#'   R JOURNAL, 14(1), 300-319.
 #' @references Roy, M. H., & Larocque, D. (2020). Prediction intervals with
 #'   random forests. Statistical methods in medical research, 29(1), 205-229.
 #'   doi:10.1177/0962280219829885.

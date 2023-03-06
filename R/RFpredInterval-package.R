@@ -3,7 +3,7 @@
 #'
 #' \code{RFpredInterval} provides methods to build prediction intervals with
 #' random forests. The methods provided in the package are Prediction Intervals
-#' with Boosted Forests (PIBF) proposed by Alakus et al. (2021) and 15 distinct
+#' with Boosted Forests (PIBF) proposed by Alakus et al. (2022) and 15 distinct
 #' variations to build PIs proposed by Roy and Larocque (2020).
 #' \code{RFpredInterval} includes two main functions: \code{pibf()} and
 #' \code{rfpi()}. \code{pibf()} applies the PIBF method and it uses the
@@ -36,9 +36,9 @@
 #'   \code{\link{plot.rfpredinterval}}
 #'   \code{\link{print.rfpredinterval}}
 #'
-#' @references Alakus, C., Larocque, D., and Labbe, A. (2021). RFpredInterval:
-#'   An R Package for Prediction Intervals with Random Forests and Boosted
-#'   Forests. arXiv preprint arXiv:2106.08217.
+#' @references Alakus, C., Larocque, D., & Labbe, A. (2022). RFpredInterval: An
+#'   R Package for Prediction Intervals with Random Forests and Boosted Forests.
+#'   R JOURNAL, 14(1), 300-319.
 #' @references Ishwaran H, Kogalur U (2021). Fast Unified Random Forests for
 #'   Survival, Regression, and Classification (RF-SRC). R package version
 #'   2.11.0, \url{https://cran.r-project.org/package=randomForestSRC}.
