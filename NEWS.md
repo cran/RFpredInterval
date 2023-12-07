@@ -1,3 +1,6 @@
+## RFpredInterval 1.0.8
+* Fixed warning: format string is not a string literal.
+
 ## RFpredInterval 1.0.7
 * Fixed function declaration without a prototype.
 * Fixed sprintf calls per Prof. Ripley.

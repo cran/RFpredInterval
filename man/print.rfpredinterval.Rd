@@ -17,6 +17,7 @@ Print summary output from \code{pibf()}, \code{rfpi()}, or \code{piall()}
 functions. This is the default print method for the package.
 }
 \examples{
+\donttest{
 ## load example data
 data(BostonHousing, package = "RFpredInterval")
 set.seed(2345)
@@ -44,7 +45,7 @@ out2 <- rfpi(formula = medv ~ ., traindata = traindata,
 
 ## print summary output
 print(out2)
-
+}
 }
 \seealso{
 \code{\link{pibf}} \code{\link{piall}} \code{\link{rfpi}}

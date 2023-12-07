@@ -107,6 +107,7 @@ procedure for the PIBF method is calibration with CV.
 }
 
 \examples{
+\donttest{
 ## load example data
 data(BostonHousing, package = "RFpredInterval")
 set.seed(2345)
@@ -139,12 +140,13 @@ out2$pred_interval
 
 ## get the working level of alpha (alphaw)
 out2$alphaw
+}
 
 }
 \references{
-Alakus, C., Larocque, D., and Labbe, A. (2021). RFpredInterval:
-An R Package for Prediction Intervals with Random Forests and Boosted
-Forests. arXiv preprint arXiv:2106.08217.
+Alakus, C., Larocque, D., & Labbe, A. (2022). RFpredInterval: An
+R Package for Prediction Intervals with Random Forests and Boosted Forests.
+R JOURNAL, 14(1), 300-319.
 
 Roy, M. H., & Larocque, D. (2020). Prediction intervals with
 random forests. Statistical methods in medical research, 29(1), 205-229.

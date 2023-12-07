@@ -1,6 +1,6 @@
 plot.subsample.rfsrc <- function(x, alpha = .01,
                           standardize = TRUE, normal = TRUE, jknife = TRUE,
-                          target, m.target = NULL, pmax = 75, main = "", 
+                          target, m.target = NULL, pmax = 75, main = "",
                           ...)
 {
   ##--------------------------------------------------------------
@@ -45,7 +45,7 @@ plot.subsample.rfsrc <- function(x, alpha = .01,
     xlab <- "vimp"
   }
   ## extract vimp column names - be careful if this is multivariate
-  if (is.null(m.target)) {  
+  if (is.null(m.target)) {
     vmp.col.names <- colnames(x$vmp[[1]])
   }
   else {
@@ -72,7 +72,7 @@ plot.subsample.rfsrc <- function(x, alpha = .01,
     }
     xlab <- paste(xlab, " (", vmp.col.names[1 + target], ")", sep = "")
   }
-  else if (fmly == "surv-CR") {    
+  else if (fmly == "surv-CR") {
     if (missing(target)) {
       target <- 0
     }
@@ -131,7 +131,7 @@ plot.subsample.rfsrc <- function(x, alpha = .01,
   }
   ##--------------------------------------------------------------
   ##
-  ## skeleton boxplot 
+  ## skeleton boxplot
   ##
   ##--------------------------------------------------------------
   bp <- boxplot(boxplot.dta,
@@ -140,7 +140,7 @@ plot.subsample.rfsrc <- function(x, alpha = .01,
                 horizontal = TRUE,
                 plot = FALSE)
   bp$stats <- ci
-  col.pt <- bp$stats[1, ] > 0 
+  col.pt <- bp$stats[1, ] > 0
   col.pt[is.na(col.pt)] <- FALSE
   colr <- c("blue", "red")[1 + col.pt]
   ##--------------------------------------------------------------
@@ -151,18 +151,18 @@ plot.subsample.rfsrc <- function(x, alpha = .01,
   ## pull the unnamed options
   dots <- list(...)
   bxp.names <- c(names(formals(bxp)),
-                 "xaxt", "yaxt", "las", "cex.axis", 
+                 "xaxt", "yaxt", "las", "cex.axis",
                  "col.axis", "cex.main",
-                 "col.main", "sub", "cex.sub", "col.sub", 
+                 "col.main", "sub", "cex.sub", "col.sub",
                  "ylab", "cex.lab", "col.lab")
   axis.names <- formals(axis)
   axis.names$tick <- axis.names$las <- axis.names$labels <- NULL
-  axis.names <- c(names(axis.names), "cex.axis") 
+  axis.names <- c(names(axis.names), "cex.axis")
   ## override xlab
   if (!is.null(dots$xlab)) {
     xlab <- dots$xlab
   }
-  ## overlay ylab when user mistakenly uses it  
+  ## overlay ylab when user mistakenly uses it
   if (!is.null(dots$ylab) && length(dots$ylab) == p) {
     bp$names <- dots$ylab[o.pt]
     bxp.names <- bxp.names[bxp.names != "ylab"]
@@ -176,7 +176,7 @@ plot.subsample.rfsrc <- function(x, alpha = .01,
   ## draw the core bxp plot
   ##
   ##--------------------------------------------------------------
-  do.call("bxp", c(list(z = bp, main = main, xlab = xlab, 
+  do.call("bxp", c(list(z = bp, main = main, xlab = xlab,
                         boxfill = colr, xaxt = "n", yaxt = "n",
                         outline = FALSE, horizontal = TRUE),
                    dots[names(dots) %in% bxp.names]))

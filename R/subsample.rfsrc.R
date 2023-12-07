@@ -1,11 +1,11 @@
-subsample.rfsrc <- function(obj,                
+subsample.rfsrc <- function(obj,
                             B = 100,
                             block.size = 1,
                             subratio = NULL,
                             stratify = TRUE,
                             joint = FALSE,
                             bootstrap = FALSE,
-                            verbose = TRUE) 
+                            verbose = TRUE)
 {
   ##--------------------------------------------------------------
   ##
@@ -24,7 +24,7 @@ subsample.rfsrc <- function(obj,
   ##
   ##--------------------------------------------------------------
   fmly <- obj$family
-  mv.fmly <- fmly == "regr+" || fmly == "class+" || fmly == "mix+" 
+  mv.fmly <- fmly == "regr+" || fmly == "class+" || fmly == "mix+"
   ##--------------------------------------------------------------
   ##
   ## set the sample size
@@ -56,7 +56,7 @@ subsample.rfsrc <- function(obj,
                  "split.wt",
                  "cause.wt",
                  "block.size")
-   
+
   ## list of parameters to be obtained from the forest object
   forest.prms <- c("forest",
                    "bootstrap",
@@ -232,7 +232,7 @@ extract.subsample <- function(obj, alpha = .05, target = 0, m.target = NULL, sta
   }
   if (!subsample) {
     return(extract.bootsample(obj, alpha = alpha,
-              target = target, m.target = m.target, standardize = standardize))    
+              target = target, m.target = m.target, standardize = standardize))
   }
   ## coerce the (potentially) multivariate rf object
   m.target <- get.univariate.target(obj$rf, m.target)
@@ -244,7 +244,7 @@ extract.subsample <- function(obj, alpha = .05, target = 0, m.target = NULL, sta
   else {
     vmp <- obj$vmp[[m.target]][, 1 + target, drop = FALSE]
   }
-  ## coerce the (potentially) multivariate subsampled vimp 
+  ## coerce the (potentially) multivariate subsampled vimp
   if (is.null(m.target)) {
     obj$vmpS <- lapply(obj$vmpS, data.frame)
   }
@@ -252,7 +252,7 @@ extract.subsample <- function(obj, alpha = .05, target = 0, m.target = NULL, sta
     obj$vmpS <- lapply(obj$vmpS, function(oo) {
       oo[[m.target]]
     })
-  }  
+  }
   ## extract necessary objects
   theta.hat <- get.standardize.vimp(obj$rf, vmp, standardize)[, 1]
   theta.star <- get.standardize.vimp(obj$rf, rbind(sapply(obj$vmpS, "[[", 1 + target)), standardize)
@@ -264,13 +264,13 @@ extract.subsample <- function(obj, alpha = .05, target = 0, m.target = NULL, sta
   scl <- sqrt(obj$subratio)
   theta.star.scl <- theta.hat - scl * rowMeans(theta.star, na.rm = TRUE)
   boxplot.dta <- data.frame(t(scl * theta.star + theta.star.scl))
-  ## subsampled z-statistic 
-  z.star <- sqrt(m) * (theta.star - theta.hat) 
+  ## subsampled z-statistic
+  z.star <- sqrt(m) * (theta.star - theta.hat)
   ## asymptotic standard error
   se.Z <- sqrt(m / n) * apply(theta.star, 1, sd, na.rm = TRUE)
   ## asymptotic JK standard error
   se.jk.Z <- sqrt((m / n) * rowMeans((theta.star - theta.hat)^2, na.rm = TRUE))
-  ## nonparametric (default) subsampling confidence interval  
+  ## nonparametric (default) subsampling confidence interval
   ci <- do.call(cbind, lapply(1:nrow(z.star), function(rowj) {
     c(theta.hat[rowj] - quantile(z.star[rowj, ], 1 - alpha/2, na.rm = TRUE) / sqrt(n),
       theta.hat[rowj] - quantile(z.star[rowj, ], .75, na.rm = TRUE) / sqrt(n),
@@ -361,7 +361,7 @@ get.standardize.vimp <- function(obj, vmp, standardize = FALSE) {
     do.call(cbind, lapply(1:ncol(vmp), function(j) {
       v <- vmp[, j]
       if (obj$family != "regr") {
-        100 * v 
+        100 * v
       }
       else {
         100 * v / var(obj$yvar, na.rm = TRUE)
@@ -393,7 +393,7 @@ make.double.boot.sample <- function(ntree, n, smp, size = function(x) {x}, repla
 }
 ###################################################################
 ##
-## stratified sampling without replacement 
+## stratified sampling without replacement
 ##
 ###################################################################
 make.strat.sample <- function(y, subratio) {
@@ -401,7 +401,7 @@ make.strat.sample <- function(y, subratio) {
   class.labels <- names(frq)
   as.numeric(unlist(sapply(class.labels, function(cl) {
     pt <- which(y == cl)
-    sample(pt, size = length(pt) * subratio, replace = FALSE)    
+    sample(pt, size = length(pt) * subratio, replace = FALSE)
   })))
 }
 ###################################################################
@@ -409,30 +409,30 @@ make.strat.sample <- function(y, subratio) {
 ## print function for subsampled ci
 ##
 ###################################################################
-print.subsample.rfsrc <- function(x, alpha = .05, standardize = TRUE) {
-  vmp <- x$vmp
-  nullO <- lapply(1:length(vmp), function(j) {
-    m.target <- names(vmp)[j]
-    p.vmp <- ncol(vmp[[j]])
-    vmp.col.names <- colnames(vmp[[j]])
-    if (length(vmp) > 1) {
-      cat("processing a multivariate family, outcome:", m.target, "\n")
-    }
-    lapply(1:p.vmp, function(k) {
-      oo <- extract.subsample(x, alpha = alpha, target = k - 1,
-                  m.target = m.target, standardize = standardize)
-      cat("===== VIMP confidence regions for", vmp.col.names[k], " =====\n")
-      cat("nonparametric:\n")
-      print(round(oo$ci, 3))
-      cat("parametric:\n")
-      print(round(oo$ci.Z, 3))
-      cat("parametric (jackknife):\n")
-      print(round(oo$ci.jk.Z, 3))
-      NULL
-    })
-  })
-}
-print.subsample <- print.subsample.rfsrc
+# print.subsample.rfsrc <- function(x, alpha = .05, standardize = TRUE) {
+#   vmp <- x$vmp
+#   nullO <- lapply(1:length(vmp), function(j) {
+#     m.target <- names(vmp)[j]
+#     p.vmp <- ncol(vmp[[j]])
+#     vmp.col.names <- colnames(vmp[[j]])
+#     if (length(vmp) > 1) {
+#       cat("processing a multivariate family, outcome:", m.target, "\n")
+#     }
+#     lapply(1:p.vmp, function(k) {
+#       oo <- extract.subsample(x, alpha = alpha, target = k - 1,
+#                   m.target = m.target, standardize = standardize)
+#       cat("===== VIMP confidence regions for", vmp.col.names[k], " =====\n")
+#       cat("nonparametric:\n")
+#       print(round(oo$ci, 3))
+#       cat("parametric:\n")
+#       print(round(oo$ci.Z, 3))
+#       cat("parametric (jackknife):\n")
+#       print(round(oo$ci.jk.Z, 3))
+#       NULL
+#     })
+#   })
+# }
+# print.subsample <- print.subsample.rfsrc
 ###################################################################
 ##
 ## combine two lists of vimp: o1 is master, o2 is appended
@@ -499,7 +499,7 @@ bootsample <- function(obj, rf.prms, B, block.size, joint, verbose) {
     }
     ##---------------------------------------------------
     ##
-    ## double bootstrap 
+    ## double bootstrap
     ##
     ##---------------------------------------------------
     ## double bootstrap sample
@@ -531,7 +531,7 @@ bootsample <- function(obj, rf.prms, B, block.size, joint, verbose) {
     rO.b
   })
   ## return the potentially updated forest object
-  ## return the vimp 
+  ## return the vimp
   list(rf = obj, vmp = vmp, vmpB = vmpB)
 }
 ###################################################################
@@ -556,7 +556,7 @@ extract.bootsample <- function(obj, alpha = .05, target = 0, m.target = NULL, st
     obj$vmpB <- lapply(obj$vmpB, function(oo) {
       oo[[m.target]]
     })
-  }  
+  }
   ## extract vimp
   theta.boot <- get.standardize.vimp(obj$rf, rbind(sapply(obj$vmpB, "[[", 1 + target)), standardize)
   rownames(theta.boot) <- rownames(obj$vmp[[1]][, 1 + target, drop = FALSE])
@@ -609,25 +609,25 @@ extract.bootsample <- function(obj, alpha = .05, target = 0, m.target = NULL, st
 ## print function from bootstrap ci
 ##
 ###################################################################
-print.bootsample.rfsrc <- function(x, alpha = .05, standardize = TRUE) {
-  vmp <- x$vmp
-  nullO <- lapply(1:length(vmp), function(j) {
-    m.target <- names(vmp)[j]
-    p.vmp <- ncol(vmp[[j]])
-    vmp.col.names <- colnames(vmp[[j]])
-    if (length(vmp) > 1) {
-      cat("processing a multivariate family, outcome:", m.target, "\n")
-    }
-    lapply(1:p.vmp, function(k) {
-      oo <- extract.bootsample(x, alpha = alpha, target = k - 1,
-                   m.target = m.target, standardize = standardize)
-      cat("===== VIMP confidence regions for", vmp.col.names[k], " =====\n")
-      cat("nonparametric:\n")
-      print(round(oo$ci, 3))
-      cat("parametric:\n")
-      print(round(oo$ci.Z, 3))
-      NULL
-    })
-  })
-}
-print.bootsample <- print.bootsample.rfsrc
+# print.bootsample.rfsrc <- function(x, alpha = .05, standardize = TRUE) {
+#   vmp <- x$vmp
+#   nullO <- lapply(1:length(vmp), function(j) {
+#     m.target <- names(vmp)[j]
+#     p.vmp <- ncol(vmp[[j]])
+#     vmp.col.names <- colnames(vmp[[j]])
+#     if (length(vmp) > 1) {
+#       cat("processing a multivariate family, outcome:", m.target, "\n")
+#     }
+#     lapply(1:p.vmp, function(k) {
+#       oo <- extract.bootsample(x, alpha = alpha, target = k - 1,
+#                    m.target = m.target, standardize = standardize)
+#       cat("===== VIMP confidence regions for", vmp.col.names[k], " =====\n")
+#       cat("nonparametric:\n")
+#       print(round(oo$ci, 3))
+#       cat("parametric:\n")
+#       print(round(oo$ci.Z, 3))
+#       NULL
+#     })
+#   })
+# }
+# print.bootsample <- print.bootsample.rfsrc

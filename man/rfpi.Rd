@@ -138,6 +138,7 @@ the level used to build the prediction intervals for the new observations.
 }
 
 \examples{
+\donttest{
 ## load example data
 data(BostonHousing, package = "RFpredInterval")
 set.seed(2345)
@@ -173,6 +174,7 @@ out2 <- rfpi(formula = medv ~ ., traindata = traindata,
 
 ## get the PI with "quant" method for the testdata
 cbind(out2$quant_interval$lower, out2$quant_interval$upper)
+}
 
 }
 \references{

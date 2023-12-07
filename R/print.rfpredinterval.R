@@ -8,6 +8,7 @@
 #' @param ...  Optional arguments to be passed to other methods.
 #'
 #' @examples
+#' \donttest{
 #' ## load example data
 #' data(BostonHousing, package = "RFpredInterval")
 #' set.seed(2345)
@@ -35,7 +36,7 @@
 #'
 #' ## print summary output
 #' print(out2)
-#'
+#' }
 #' @seealso \code{\link{pibf}} \code{\link{piall}} \code{\link{rfpi}}
 
 print.rfpredinterval <- function(x, ...) {

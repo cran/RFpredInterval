@@ -105,6 +105,7 @@
 #'   doi:10.1177/0962280219829885.
 #'
 #' @examples
+#' \donttest{
 #' ## load example data
 #' data(BostonHousing, package = "RFpredInterval")
 #' set.seed(2345)
@@ -140,6 +141,7 @@
 #'
 #' ## get the PI with "quant" method for the testdata
 #' cbind(out2$quant_interval$lower, out2$quant_interval$upper)
+#' }
 #'
 #' @seealso \code{\link{piall}} \code{\link{pibf}}
 #' \code{\link{print.rfpredinterval}}
